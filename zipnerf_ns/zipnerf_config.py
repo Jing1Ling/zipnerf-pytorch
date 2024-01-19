@@ -36,7 +36,7 @@ zipnerf_method = MethodSpecification(
         pipeline=ZipNerfPipelineConfig(
             datamanager=ZipNerfDataManagerConfig(
                 dataparser=ColmapDataParserConfig(downscale_factor=4,orientation_method="up",center_method="poses"),
-                train_num_rays_per_batch=32766,
+                train_num_rays_per_batch=16384,
                 eval_num_rays_per_batch=8192,
             ),
             model=ZipNerfModelConfig(
