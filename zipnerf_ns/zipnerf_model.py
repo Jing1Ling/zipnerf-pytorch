@@ -229,10 +229,11 @@ class ZipNerfModel(Model):
             if self.config.anneal_slope > 0:  
                 # Schlick's bias function, see https://arxiv.org/abs/2010.09714
                 bias = lambda x, s: (s * x) / ((s - 1) * x + 1)
-                anneal = bias(self.step*1.0/self.config.proposal_weights_anneal_max_num_iters, self.config.anneal_slope)
+                train_frac = np.clip(self.step*1.0/self.config.proposal_weights_anneal_max_num_iters, 0, 1)
+                anneal = bias(train_frac, self.config.anneal_slope)
             else:
                 anneal = 1.
-            anneal = 1.
+            # anneal = 1.
 
             # A slightly more stable way to compute weights**anneal. If the distance
             # between adjacent intervals is zero then its weight is fixed to 0.
