@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Dict, List, Literal, Type
 from internal.render import cast_rays, compute_alpha_weights
-from zipnerf_ns.zipnerf_field import ZipNerfField
+from zipnerf_ns.zipnerf_field import  ZipnerfMLPWrapper
 
 from nerfstudio.models.nerfacto import NerfactoModel, NerfactoModelConfig  # for subclassing Nerfacto model
 from nerfstudio.models.base_model import Model, ModelConfig  # for custom Model
@@ -33,6 +33,7 @@ from internal import coord
 from internal import train_utils
 from internal import render
 from internal import stepfun
+from internal.models import MLP, NerfMLP,PropMLP
 import numpy as np
 from torch.utils._pytree import tree_map
 from nerfstudio.utils import colormaps
@@ -127,16 +128,16 @@ class ZipNerfModel(Model):
         self.backend = Backend.get_backend()
 
         # initiate MLP
-        self.nerf_mlp = ZipNerfField(num_glo_features=self.config.num_glo_features,
+        self.nerf_mlp = ZipnerfMLPWrapper(num_glo_features=self.config.num_glo_features,
                                 num_glo_embeddings=self.config.num_glo_embeddings)
         
         if self.config.single_mlp:
             self.prop_mlp = self.nerf_mlp
         elif not self.config.distinct_prop: 
-            self.prop_mlp = ZipNerfField()
+            self.prop_mlp = ZipnerfMLPWrapper()
         else:
             for i in range(self.config.num_levels - 1):
-                self.register_module(f'prop_mlp_{i}', ZipNerfField(grid_disired_resolution=self.config.prop_desired_grid_size[i],
+                self.register_module(f'prop_mlp_{i}', ZipnerfMLPWrapper(grid_disired_resolution=self.config.prop_desired_grid_size[i],
                                                                         disable_rgb=True,grid_level_dim=1))
         
         if self.config.num_glo_features > 0 and not self.config.zero_glo:
