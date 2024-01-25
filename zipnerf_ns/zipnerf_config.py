@@ -45,8 +45,8 @@ zipnerf_method = MethodSpecification(
         ),
         optimizers={
             "model": {
-                "optimizer": AdamOptimizerConfig(lr=1e-2, eps=1e-15),
-                "scheduler": ExponentialDecaySchedulerConfig(warmup_steps=5000,lr_final=1e-3, max_steps=25000)
+                "optimizer": AdamOptimizerConfig(lr=8e-3, eps=1e-15),
+                "scheduler": ExponentialDecaySchedulerConfig(warmup_steps=1000,lr_final=1e-3, max_steps=25000)
             }
         },
         viewer=ViewerConfig(num_rays_per_chunk=1 << 15),
