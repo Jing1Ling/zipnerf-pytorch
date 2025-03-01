@@ -155,7 +155,7 @@ class ZipNerfModel(Model):
         """Returns a dictionary of losses to be summed which will be your loss."""
         loss_dict={}
         batch['lossmult'] = torch.Tensor([1.]).to(self.device)
-        
+        batch['rgb'] = batch['image'].to(self.device)
         data_loss, stats = train_utils.compute_data_loss(batch, outputs['renderings'], self.zipnerf.config)
         loss_dict['data'] = data_loss
         

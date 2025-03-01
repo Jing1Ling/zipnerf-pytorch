@@ -6,13 +6,9 @@ Define your custom method here that registers with Nerfstudio CLI.
 
 from __future__ import annotations
 
-from zipnerf_ns.zipnerf_datamanager import (
-    ZipNerfDataManagerConfig,
-)
+
 from zipnerf_ns.zipnerf_model import ZipNerfModelConfig
-from zipnerf_ns.zipnerf_pipeline import (
-    ZipNerfPipelineConfig,
-)
+
 from nerfstudio.configs.base_config import ViewerConfig
 from nerfstudio.data.dataparsers.colmap_dataparser import ColmapDataParserConfig
 from nerfstudio.engine.optimizers import AdamOptimizerConfig
@@ -21,7 +17,8 @@ from nerfstudio.engine.schedulers import (
 )
 from nerfstudio.engine.trainer import TrainerConfig
 from nerfstudio.plugins.types import MethodSpecification
-
+from nerfstudio.pipelines.base_pipeline import VanillaPipelineConfig
+from nerfstudio.data.datamanagers.base_datamanager import VanillaDataManagerConfig
 
 zipnerf_method = MethodSpecification(
     config=TrainerConfig(
@@ -32,9 +29,9 @@ zipnerf_method = MethodSpecification(
         max_num_iterations=25000,
         mixed_precision=True,
         log_gradients=False,
-        pipeline=ZipNerfPipelineConfig(
-            datamanager=ZipNerfDataManagerConfig(
-                dataparser=ColmapDataParserConfig(downscale_factor=4,orientation_method="up",center_method="poses", colmap_path="sparse/0"),
+        pipeline=VanillaPipelineConfig(
+            datamanager=VanillaDataManagerConfig(
+                dataparser=ColmapDataParserConfig(downscale_factor=4,orientation_method="up",center_method="poses", colmap_path="colmap/sparse/0"),
                 train_num_rays_per_batch=8192,
                 eval_num_rays_per_batch=8192,
             ),
